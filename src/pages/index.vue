@@ -20,10 +20,10 @@
     <div class="fixed-center">
       <div class="row justify-center gutter-xs">
         <div class="row justify-center">
-          <q-btn class="go-btn " color="green">Go!</q-btn>
+          <q-btn class="go-btn " @click="go" color="green">Go!</q-btn>
         </div>
         <div class="row justify-center">
-          <q-btn class="arm-btn" color="red">Arm!</q-btn>
+          <q-btn class="arm-btn" @click="arm" color="red">Arm!</q-btn>
         </div>
       </div>
     </div>
@@ -38,12 +38,14 @@
 export default {
   name: 'PageIndex',
   created() {
+    this.socket = new WebSocket('ws://10.125.104.129:9000');
     setInterval(() => {
       this.xInt += 0.1;
     }, 20);
   },
   data() {
     return {
+      socket: null,
       xInt: 0
       // y: '1',
       // z: '1'
@@ -58,6 +60,14 @@ export default {
     },
     z() {
       return (Math.tan(this.xInt) * 100).toPrecision(4);
+    }
+  },
+  methods: {
+    arm() {
+      this.socket.send(JSON.stringify({ token: 'j', command: 'arm' }));
+    },
+    go() {
+      this.socket.send(JSON.stringify({ token: 'j', command: 'go' }));
     }
   }
 };
